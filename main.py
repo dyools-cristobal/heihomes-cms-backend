@@ -12,6 +12,8 @@ import models
 
 from apis.rooms import router as rooms_router
 from apis.roles import router as roles_router
+from apis.properties import router as properties_router
+from apis.amenities import router as amenities_router
 
 app = FastAPI()
 
@@ -19,6 +21,8 @@ models.Base.metadata.create_all(bind=engine)
 
 app.include_router(rooms_router)
 app.include_router(roles_router)
+app.include_router(properties_router)
+app.include_router(amenities_router)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") 
 
