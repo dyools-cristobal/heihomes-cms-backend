@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# URL_DATABASE = "mysql+pymysql://root:EmiliaSofia2023!@localhost:3306/HeiHomes"
-URL_DATABASE = "mysql+pymysql://u810413882_heihomes:livewithHEI1989!@srv1387.hstgr.io:3306/u810413882_heihomes"
+URL_DATABASE = "mysql+pymysql://root:EmiliaSofia2023!@localhost:3306/HeiHomes"
+# URL_DATABASE = "mysql+pymysql://u810413882_heihomes:livewithHEI1989!@srv1387.hstgr.io:3306/u810413882_heihomes"
 
 
 try:
