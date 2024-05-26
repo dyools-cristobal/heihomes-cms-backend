@@ -1,5 +1,6 @@
 # Ignore Python bytecode and cache
 __pycache__/
+apis/__pycache__/
 *.py[cod]
 
 # Ignore virtual environments

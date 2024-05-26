@@ -1,10 +1,5 @@
-from decimal import Decimal
-from tkinter.font import BOLD
-from fastapi import FastAPI
-from pydantic import BaseModel
 from sqlalchemy import ARRAY, JSON, Boolean, Column, DateTime, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
-# from sqlalchemy.ext.declarative import declarative_base
 from apis.properties import NearestMRTStation
 from database import Base
 

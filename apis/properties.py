@@ -1,5 +1,4 @@
 from datetime import datetime
-import string
 from xmlrpc.client import boolean
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
@@ -11,7 +10,6 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from sqlalchemy import Float, select
-from passlib.context import CryptContext
 
 
 router = APIRouter()

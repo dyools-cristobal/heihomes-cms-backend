@@ -11,7 +11,6 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from sqlalchemy import Float, select
-from passlib.context import CryptContext
 
 
 router = APIRouter()
