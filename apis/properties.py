@@ -50,7 +50,7 @@ class PropertyBase(BaseModel):
     heroImageLink: str
     communalSpacesImages: List[ComunalSpacesImage]
     numberOfBathrooms: int
-    amenities: List[Amenities]
+    amenities: Amenities
     pricePerMonth: float
     tenancyEndDate: datetime
     utilityCap: int
