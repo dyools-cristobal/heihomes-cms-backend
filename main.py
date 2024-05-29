@@ -22,7 +22,8 @@ app.include_router(upload_router)
 
 origins = [
     'http://localhost:4200',
-    'heihomes.co'
+    'heihomes.co',
+    'https://heihomes-sg.preview-domain.com'
 ]
 
 app.add_middleware(
