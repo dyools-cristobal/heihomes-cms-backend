@@ -3,3 +3,4 @@ pymysql
 sqlalchemy
 uvicorn
 gunicorn
+python-multipart

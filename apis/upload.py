@@ -1,44 +1,49 @@
-from fastapi import APIRouter, File, UploadFile, HTTPException
-from ftplib import FTP
+from fastapi import APIRouter, File, UploadFile, BackgroundTasks, HTTPException, Depends
 import aiofiles
 import os
+from ftplib import FTP
 
 router = APIRouter()
 
 # FTP credentials and server details
-FTP_SERVER = 'ftp://82.197.80.89:21'
+FTP_SERVER = '82.197.80.89'
 FTP_USER = 'u810413882'
 FTP_PASSWORD = 'livewithHEI1989!'
-FTP_UPLOAD_DIR = '/assets/images/'
+FTP_UPLOAD_DIR = '/public_html/assets/images/'
 
 async def upload_to_ftp(file_path: str, remote_path: str):
     try:
-        ftp = FTP(FTP_SERVER)
-        ftp.login(user=FTP_USER, passwd=FTP_PASSWORD)
-        with open(file_path, 'rb') as f:
-            ftp.storbinary(f'STOR {remote_path}', f)
-        ftp.quit()
+        with FTP() as ftp:
+            ftp.connect(FTP_SERVER)
+            ftp.login(FTP_USER, FTP_PASSWORD)
+            with open(file_path, 'rb') as f:
+                ftp.storbinary(f'STOR {remote_path}', f)
+    except ConnectionRefusedError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to connect to FTP server: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"FTP upload failed: {str(e)}")
 
 @router.post("/upload/")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     UPLOAD_DIR = "uploads"
+    
     if not os.path.exists(UPLOAD_DIR):
         os.makedirs(UPLOAD_DIR)
-    
-    file_path = os.path.join(UPLOAD_DIR, file.filename) # type: ignore
-    
+
+    if file.filename:
+        file_path = os.path.join(UPLOAD_DIR, file.filename)
+
     # Save the uploaded file locally
     async with aiofiles.open(file_path, 'wb') as out_file:
         content = await file.read()
         await out_file.write(content)
-    
+
     # Upload the file to the FTP server
-    remote_path = os.path.join(FTP_UPLOAD_DIR, file.filename) # type: ignore
-    await upload_to_ftp(file_path, remote_path)
-    
-    # Optionally, delete the local file after upload
-    os.remove(file_path)
-    
-    return {"info": f"file '{file.filename}' uploaded successfully"}
+    if file.filename:
+        remote_path = os.path.join(FTP_UPLOAD_DIR, file.filename)
+        background_tasks.add_task(upload_to_ftp, file_path, remote_path)
+
+        # Construct the URL of the uploaded image
+        file_url = f"ftp://{FTP_SERVER}{remote_path}"
+   
+    return {"info": f"file '{file.filename}' uploaded successfully", "url": file_url}
