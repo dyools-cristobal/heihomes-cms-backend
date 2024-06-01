@@ -6,7 +6,7 @@ from ftplib import FTP
 router = APIRouter()
 
 # FTP credentials and server details
-FTP_SERVER = 'ftp://heihomes.sg'
+FTP_SERVER = '82.197.80.89'
 FTP_USER = 'u810413882'
 FTP_PASSWORD = 'livewithHEI1989!'
 FTP_UPLOAD_DIR = '/public_html/assets/images/rooms/'
@@ -58,6 +58,7 @@ async def upload_image(background_tasks: BackgroundTasks, file: UploadFile = Fil
     if file.filename:
         remote_path = os.path.join(FTP_UPLOAD_DIR, file.filename)
         background_tasks.add_task(upload_to_ftp, file_path, remote_path)
+        await background_tasks()
 
         # Construct the URL of the uploaded image
         file_url = f"{file.filename}"
@@ -83,8 +84,9 @@ async def upload_file(background_tasks: BackgroundTasks, file: UploadFile = File
     if file.filename:
         remote_path = os.path.join(FTP_UPLOAD_DIR, file.filename)
         background_tasks.add_task(upload_to_ftp, file_path, remote_path)
+        await background_tasks()
 
         # Construct the URL of the uploaded image
-        file_url = f"{file.filename}"
+        file_url = f"{file_path}{file.filename}"
    
     return {"info": f"file '{file.filename}' uploaded successfully", "url": file_url}
