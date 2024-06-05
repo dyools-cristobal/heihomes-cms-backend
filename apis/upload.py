@@ -36,8 +36,8 @@ async def upload_image(background_tasks: BackgroundTasks, file: UploadFile = Fil
     if file.filename:
         # File type validation
         file_ext = file.filename.split('.')[-1]
-        if file_ext.lower() not in ALLOWED_EXTENSIONS:
-            raise HTTPException(status_code=400, detail="Only jpeg, jpg, and png files are allowed.")
+        # if file_ext.lower() not in ALLOWED_EXTENSIONS:
+        #     raise HTTPException(status_code=400, detail="Only jpeg, jpg, and png files are allowed.")
 
         # File size validation
         if file.file.__sizeof__() > MAX_FILE_SIZE:
