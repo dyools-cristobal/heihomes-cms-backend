@@ -8,6 +8,7 @@ from apis.roles import router as roles_router
 from apis.properties import router as properties_router
 from apis.amenities import router as amenities_router
 from apis.upload import router as upload_router
+from apis.auth import router as auth_router
 
 app = FastAPI()
 
@@ -18,6 +19,7 @@ app.include_router(roles_router)
 app.include_router(properties_router)
 app.include_router(amenities_router)
 app.include_router(upload_router)
+app.include_router(auth_router)
 
 
 origins = [
