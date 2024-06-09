@@ -27,6 +27,7 @@ origins = [
     'https://localhost:4200',
     'heihomes.co',
     'https://heihomes.sg',
+    'http://heihomes.sg',
     'https://heihomes-sg.preview-domain.com'
 ]
 
