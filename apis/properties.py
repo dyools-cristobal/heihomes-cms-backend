@@ -121,30 +121,12 @@ async def update_property(property_id: int, property: PropertyBase, db: db_depen
         if not db_property:
             raise HTTPException(status_code=404, detail="Room not found")
         
-        # Update user attributes
-        # for attr, value in property.dict().items():
-        #     if attr != 'communalSpacesImages':  # Skip updating communalSpacesImages here
-        #         setattr(db_property, attr, value)
-        
-        # Update or save communalSpaceImages
-        # if property.communalSpacesImages:
-        #     for image_data in property.communalSpacesImages:
-        #         if image_data.id:
-        #             existing_image = next((img for img in db_property.communalSpacesImages if img.id == image_data.id), None)
-        #             if existing_image:
-        #                 # Update existing image
-        #                 existing_image.link = image_data.link
-        #                 existing_image.alt = image_data.alt
-        #             else:
-        #                 # Add new image
-        #                 communal_space_image = models.CommunalSpaceImage(**image_data.dict())
-        #                 db_property.communalSpacesImages.append(communal_space_image)
-        #         else:
-        #             # Add new image if id is not provided
-        #             communal_space_image = models.CommunalSpaceImage(**image_data.dict())
-        #             db_property.communalSpacesImages.append(communal_space_image)
+        for attr, value in property.dict(exclude_unset=True).items():
+            setattr(db_property, attr, value)
 
         db.commit()
+
+        return {"message": "Property updated successfully", "property": property}
     except sqlalchemy.exc.SQLAlchemyError as e:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
