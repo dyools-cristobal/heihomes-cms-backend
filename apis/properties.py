@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from xmlrpc.client import boolean
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
@@ -35,8 +36,6 @@ class NearestBusStop(BaseModel):
     distanceInMinutes: int
 
 class ComunalSpacesImage(BaseModel):
-    id: int
-    propertyId: int
     link: str
     alt: str
 
@@ -97,26 +96,22 @@ async def get_property_by_id(property_id: int, db: Annotated[Session, Depends(ge
     db_property = db.query(models.Property).filter(models.Property.id == property_id).first()
     if db_property is None:
         raise HTTPException(status_code=404, detail="Property not found")
-    db_property.communalSpacesImages = db.query(models.CommunalSpaceImage).filter(models.CommunalSpaceImage.propertyId == property_id).all()
+    # db_property.communalSpacesImages = db.query(models.CommunalSpaceImage).filter(models.CommunalSpaceImage.propertyId == property_id).all()
     return db_property
 
 @router.post("/properties/", status_code=status.HTTP_201_CREATED)
 async def create_property(property:PropertyBase, db: db_dependency):
     try:
-        db_property = models.Property(**property.dict(exclude={'communalSpacesImages'}))
+        db_property = models.Property(**property.dict())
         db.add(db_property)
-        db.commit()
-
-        for image_data in property.communalSpacesImages:
-            db_image = models.CommunalSpaceImage(propertyId=db_property.id, **image_data.dict())
-            db.add(db_image)
         
         db.commit()
         
-        return {"message": "Property created successfully", "room_id": db_property.id}
+        return {"message": "Property created successfully", "property_id": db_property.id}
     except sqlalchemy.exc.SQLAlchemyError as e:
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        logging.error(f"An error occurred: {e}")
+        raise HTTPException(status_code=status.HTTP_422, detail=str(e))
 
 @router.put("/properties/{property_id}", status_code=status.HTTP_200_OK)
 async def update_property(property_id: int, property: PropertyBase, db: db_dependency):
@@ -127,27 +122,27 @@ async def update_property(property_id: int, property: PropertyBase, db: db_depen
             raise HTTPException(status_code=404, detail="Room not found")
         
         # Update user attributes
-        for attr, value in property.dict().items():
-            if attr != 'communalSpacesImages':  # Skip updating communalSpacesImages here
-                setattr(db_property, attr, value)
+        # for attr, value in property.dict().items():
+        #     if attr != 'communalSpacesImages':  # Skip updating communalSpacesImages here
+        #         setattr(db_property, attr, value)
         
         # Update or save communalSpaceImages
-        if property.communalSpacesImages:
-            for image_data in property.communalSpacesImages:
-                if image_data.id:
-                    existing_image = next((img for img in db_property.communalSpacesImages if img.id == image_data.id), None)
-                    if existing_image:
-                        # Update existing image
-                        existing_image.link = image_data.link
-                        existing_image.alt = image_data.alt
-                    else:
-                        # Add new image
-                        communal_space_image = models.CommunalSpaceImage(**image_data.dict())
-                        db_property.communalSpacesImages.append(communal_space_image)
-                else:
-                    # Add new image if id is not provided
-                    communal_space_image = models.CommunalSpaceImage(**image_data.dict())
-                    db_property.communalSpacesImages.append(communal_space_image)
+        # if property.communalSpacesImages:
+        #     for image_data in property.communalSpacesImages:
+        #         if image_data.id:
+        #             existing_image = next((img for img in db_property.communalSpacesImages if img.id == image_data.id), None)
+        #             if existing_image:
+        #                 # Update existing image
+        #                 existing_image.link = image_data.link
+        #                 existing_image.alt = image_data.alt
+        #             else:
+        #                 # Add new image
+        #                 communal_space_image = models.CommunalSpaceImage(**image_data.dict())
+        #                 db_property.communalSpacesImages.append(communal_space_image)
+        #         else:
+        #             # Add new image if id is not provided
+        #             communal_space_image = models.CommunalSpaceImage(**image_data.dict())
+        #             db_property.communalSpacesImages.append(communal_space_image)
 
         db.commit()
     except sqlalchemy.exc.SQLAlchemyError as e:

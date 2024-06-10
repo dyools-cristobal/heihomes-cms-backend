@@ -88,10 +88,8 @@ async def create_room(room:RoomBase, db: db_dependency):
         return {"message": "Room created successfully", "room_id": db_room.id}
     except sqlalchemy.exc.SQLAlchemyError as e:
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    # db_room = models.Room(**room.dict())
-    # db.add(db_room)
-    # db.commit()
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+
 
 @router.put("/rooms/{room_id}", status_code=status.HTTP_200_OK)
 async def update_room(room_id: int, room: RoomBase, db: db_dependency):

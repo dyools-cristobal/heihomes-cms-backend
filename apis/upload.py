@@ -89,7 +89,7 @@ async def upload_property_image(background_tasks: BackgroundTasks, file: UploadF
         await background_tasks()
 
         # Construct the URL of the uploaded image
-        file_url = f"{file_path}{file.filename}"
+        file_url = f"{file.filename}"
    
     return {"info": f"file '{file.filename}' uploaded successfully", "url": file_url}
 

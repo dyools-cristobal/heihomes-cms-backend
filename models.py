@@ -63,7 +63,7 @@ class Property(Base):
     description1 = Column(String(500))
     description2 = Column(String(500), nullable=True)
     heroImageLink = Column(String(500), nullable=True)
-    communalSpacesImages = relationship("CommunalSpaceImage")
+    communalSpacesImages = Column(JSON, nullable=True)
     numberOfBathrooms = Column(Integer, nullable=True)
     amenities = Column(JSON, nullable=True)
     pricePerMonth = Column(Float, nullable=True)

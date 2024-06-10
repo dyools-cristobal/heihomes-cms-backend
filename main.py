@@ -25,10 +25,8 @@ app.include_router(auth_router)
 origins = [
     'http://localhost:4200',
     'https://localhost:4200',
-    'heihomes.co',
     'https://heihomes.sg',
     'http://heihomes.sg',
-    'https://heihomes-sg.preview-domain.com'
 ]
 
 app.add_middleware(
