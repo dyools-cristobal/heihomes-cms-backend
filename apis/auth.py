@@ -24,9 +24,9 @@ def get_db():
     finally:
         db.close()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-
+SECRET_KEY = "heihomesisdabes"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # from apis.users import get_user
 
 @router.post("/auth/login")

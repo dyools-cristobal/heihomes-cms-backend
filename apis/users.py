@@ -23,9 +23,9 @@ class UserResponse(BaseModel):
 # pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Your JWT secret and algorithm
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+SECRET_KEY = "heihomesisdabes"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def get_db():
     db = SessionLocal()
