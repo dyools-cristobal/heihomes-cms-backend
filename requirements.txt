@@ -6,3 +6,5 @@ gunicorn
 python-multipart
 aiofiles
 PyJWT
+python-dotenv
+slowapi

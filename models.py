@@ -9,7 +9,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     roleId = Column(Integer)
     username = Column(String(50), unique=True)
-    password = Column(String(50))
+    password = Column(String(250))
 
 class Amenity(Base):
     __tablename__ = 'amenities'
