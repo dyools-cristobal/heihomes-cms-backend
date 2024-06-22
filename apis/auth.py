@@ -1,5 +1,3 @@
-import os
-from tkinter import SE
 from uu import encode
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
