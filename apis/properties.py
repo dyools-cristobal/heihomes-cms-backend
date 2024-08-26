@@ -36,7 +36,7 @@ class NearestBusStop(BaseModel):
     distanceInMinutes: int
 
 class ComunalSpacesImage(BaseModel):
-    link: str
+    image: str
     alt: str
 
 class PropertyBase(BaseModel):
