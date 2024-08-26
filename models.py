@@ -84,5 +84,5 @@ class CommunalSpaceImage(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     propertyId = Column(Integer, ForeignKey('properties.id'))
-    link = Column(String(500))
+    image = Column(String(500))
     alt = Column(String(500))

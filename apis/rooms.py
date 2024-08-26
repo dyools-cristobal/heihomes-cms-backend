@@ -1,9 +1,7 @@
-from datetime import datetime
-import string
 from xmlrpc.client import boolean
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
-from typing import Annotated, List, Optional
+from typing import Annotated, List
 
 import sqlalchemy
 
@@ -96,11 +94,11 @@ async def update_room(room_id: int, room: RoomBase, db: db_dependency):
     # Retrieve the room from the database
     db_room = db.query(models.Room).filter(models.Room.id == room_id).first()
     
-    # Check if the user exists
+    # Check if the room exists
     if not db_room:
         raise HTTPException(status_code=404, detail="Room not found")
     
-    # Update user attributes
+    # Update room attributes
     for attr, value in room.dict().items():
         setattr(db_room, attr, value)
     
