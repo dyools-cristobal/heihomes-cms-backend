@@ -30,7 +30,7 @@ class Room(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
-    unitId = Column(Integer)
+    unitId = Column(Integer, ForeignKey('properties.id'))
     roomType = Column(String(50))
     squareFootage = Column(Integer)
     bedType = Column(String(50))
@@ -51,6 +51,7 @@ class Room(Base):
     mapData = Column(JSON)
     floorPlanLink = Column(String(150))
     carouselImages = Column(JSON)
+    property = relationship("Property", back_populates="rooms")
 
 class Property(Base):
     __tablename__ = 'properties'
@@ -77,6 +78,7 @@ class Property(Base):
     mapData = Column(JSON, default=[])
     floorPlanImageLink = Column(String(500), nullable=True)
     videoLink = Column(String(500), nullable=True)
+    rooms = relationship("Room", back_populates="property")
     
 
 class CommunalSpaceImage(Base):

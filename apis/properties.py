@@ -39,6 +39,30 @@ class ComunalSpacesImage(BaseModel):
     image: str
     alt: str
 
+class Room(BaseModel):
+    name: str
+    unitId: int
+    roomType: str
+    squareFootage: int
+    bedType: str
+    closet: bool
+    attachedBathroom: bool
+    bathtub: bool
+    desk: bool
+    details1: str
+    details2: str
+    coupleRoom: bool
+    available: bool
+    nextAvailabilityDate: str
+    pricePerMonth: float
+    promoPrice: float
+    promoPeriodFrom: str
+    promoPeriodTo: str
+    nearestMRT: List[NearestMRTStation]
+    mapData: MapData
+    floorPlanLink: str
+    carouselImages: List[object]
+
 class PropertyBase(BaseModel):
     name: str
     address: str
@@ -61,6 +85,7 @@ class PropertyBase(BaseModel):
     mapData: MapData
     floorPlanImageLink: str
     videoLink: str
+    rooms: List[Room]
 
 class FormProperties(BaseModel):
     id: int
@@ -96,7 +121,9 @@ async def get_property_by_id(property_id: int, db: Annotated[Session, Depends(ge
     db_property = db.query(models.Property).filter(models.Property.id == property_id).first()
     if db_property is None:
         raise HTTPException(status_code=404, detail="Property not found")
-    # db_property.communalSpacesImages = db.query(models.CommunalSpaceImage).filter(models.CommunalSpaceImage.propertyId == property_id).all()
+    
+    db_property.rooms = db.query(models.Room).filter(models.Room.unitId == property_id).all()
+
     return db_property
 
 @router.post("/properties/", status_code=status.HTTP_201_CREATED)
