@@ -146,19 +146,18 @@ async def update_property(property_id: int, property: PropertyBase, db: db_depen
         db_property = db.query(models.Property).filter(models.Property.id == property_id).first()
         
         if not db_property:
-            raise HTTPException(status_code=404, detail="Room not found")
+            raise HTTPException(status_code=404, detail="Property not found")
         
         for attr, value in property.dict(exclude_unset=True).items():
             setattr(db_property, attr, value)
 
         db.commit()
 
-        return {"message": "Property updated successfully", "property": property}
+        return {"message": "Property updated successfully", "property": db_property}
     except sqlalchemy.exc.SQLAlchemyError as e:
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-    return db_property
+        logging.error(f"An error occurred while updating property: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred while updating the property")
 
 
 @router.delete("/properties/{property_id}",status_code=status.HTTP_200_OK)
