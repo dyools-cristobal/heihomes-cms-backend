@@ -85,7 +85,6 @@ class PropertyBase(BaseModel):
     mapData: MapData
     floorPlanImageLink: str
     videoLink: str
-    rooms: List[Room]
 
 class FormProperties(BaseModel):
     id: int
